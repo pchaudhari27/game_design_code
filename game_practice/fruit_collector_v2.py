@@ -36,19 +36,20 @@ pygame.draw.rect(movable_area, 'white', movable_area.get_rect(), width = thic)
 
 # get creepy dude spritesheet
 player_sheet = pygame.image.load('./sprite_creepy_dude.png').convert()
+sprite_res = (100, 100)
 
 # set rects for each sprite direction
-player_down_left = pygame.Rect(0, 0, 200, 200)
-player_down_right = pygame.Rect(200, 0, 200, 200)
-player_up_left = pygame.Rect(0, 200, 200, 200)
-player_up_right = pygame.Rect(200, 200, 200, 200)
+player_down_left = pygame.Rect(0, 0, sprite_res[0], sprite_res[1])
+player_down_right = pygame.Rect(sprite_res[0], 0, sprite_res[0], sprite_res[1])
+player_up_left = pygame.Rect(0, sprite_res[1], sprite_res[0], sprite_res[1])
+player_up_right = pygame.Rect(sprite_res[0], sprite_res[1], sprite_res[0], sprite_res[1])
 
 # set direction bools for which sprite rect to use
 down = True
 left = True
 
 # draw the player
-player_pos = [W//2 - 100, H//2 - 100]
+player_pos = [W//2 - sprite_res[0]//2, H//2 - sprite_res[1]//2]
 player = movable_area.blit(player_sheet, player_pos, player_down_left)
 movement_speed = [10,10]
 
@@ -98,13 +99,12 @@ while running:
         player_rect = player_up_right
 
     # make sure player cannot move off screen
-    enclosure = 200 + thic
-    if player_pos[0] + enclosure > W:
-        player_pos[0] = W - enclosure
+    if player_pos[0] + sprite_res[0] + thic > W:
+        player_pos[0] = W - sprite_res[0] - thic
     if player_pos[0] < thic:
         player_pos[0] = thic
-    if player_pos[1] + enclosure + offset > H:
-        player_pos[1] = H - enclosure - offset
+    if player_pos[1] + sprite_res[1] + thic + offset > H:
+        player_pos[1] = H - sprite_res[1] - thic - offset
     if player_pos[1] < thic:
         player_pos[1] = thic
 
@@ -112,7 +112,7 @@ while running:
     if player.colliderect(fruit):
         fruit_exists = False
         fruit_count += 1
-        fruit_counter = game_font.render(f'     Fruits Caught: {fruit_count}      ', True, 'blue', 'white')
+        fruit_counter = game_font.render(f'Fruits Caught: {fruit_count}', True, 'blue', 'white')
 
         # move fruit off screen while waiting
         fruit = pygame.Rect(-1000, -1000, fruit_w, fruit_h)
