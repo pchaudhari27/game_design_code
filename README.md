@@ -1,5 +1,5 @@
 # Welcome to my practice page!
-My name is Pavan Chaudhari, a data scientist at Enact Mortgage Insurance. I'm using this repo to practice programming small games in pygame to try and start learning game dev.
+My name is Pavan Chaudhari, a data scientist at Enact Mortgage Insurance. I'm using this repo to practice programming small games in pygame to try and start learning game dev. There is a requirements.txt file that is intended to be installed before you start the games, and they run nicely in a venv.
 
 # Pygame
 [Pygame] is a game dev module in Python built on the SDL library. This gives it some nice capabilities with the familiarity of Python (i.e., simple clean code) while having the power of great rendering tools. I was recommended to start here, before my journey into Godot.
