@@ -7,7 +7,7 @@ My name is Pavan Chaudhari, a data scientist at Enact Mortgage Insurance. I'm us
 # My games
 So far I have developed the following games:
 
-1. **Fruit Collector**: a simple game where you just move around and collect fruit. I was learning how to take in keystrokes and check image collision/hit detection here. Additionally, I learned how to wait some time before re-rendering the fruit.
+1. **Fruit Collector**: a simple game where you just move around and collect fruit. I was learning how to take in keystrokes and check image collision/hit detection here. Additionally, I learned how to wait some time before re-rendering the fruit. And finally, I uploaded a sprite sheet and read that into pygame (just made a simple one with a pixel art tool).
 
 # Thanks for visiting!
 
