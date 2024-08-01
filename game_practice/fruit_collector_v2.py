@@ -16,14 +16,14 @@ screen = pygame.display.set_mode((W, H))
 clock = pygame.time.Clock()
 
 # write title
-title = title_font.render('Fruit Collector Game', True, 'black', 'white')
+title = title_font.render('Fruit Collector Game', True, 'black')
 
 # write instructions
-instructions = game_font.render('Move with WASD. Collect fruit.', True, 'blue', 'white')
+instructions = game_font.render('Move with WASD. Collect fruit.', True, 'blue')
 
 # write fruit counter
 fruit_count = 0
-fruit_counter = game_font.render(f'Fruits Caught: {fruit_count}', True, 'blue', 'white')
+fruit_counter = game_font.render(f'Fruits Caught: {fruit_count}', True, 'blue')
 
 # collect all text in a list
 texts = [title, instructions, fruit_counter]

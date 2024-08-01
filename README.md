@@ -9,6 +9,8 @@ So far I have developed the following games:
 
 1. **Fruit Collector**: a simple game where you just move around and collect fruit. I was learning how to take in keystrokes and check image collision/hit detection here. Additionally, I learned how to wait some time before re-rendering the fruit. And finally, I uploaded a sprite sheet and read that into pygame (just made a simple one with a pixel art tool).
 
+2. **Snake**: I wanted to try to program snake to practice game logic and making a class, and this classic just made sense to me.
+
 # Thanks for visiting!
 
 [Pygame]: https://www.pygame.org/news
