@@ -54,7 +54,14 @@ class SnakeBlock:
     
     def draw(self, surf):
         self.box = pygame.draw.rect(surf, 'green' if self.parent else 'red', pygame.Rect(self.pos, self.dims))
-    
+
+def gcd(a,b):
+    while b:
+        a,b = b, a%b
+    return a
+
+def lcm(a,b):
+    return a*b//gcd(a,b)    
 
 # start pygame
 pygame.init()
@@ -82,12 +89,6 @@ length_tracker = game_font.render(f'Current Length: {length}', True, 'blue')
 # collect all text in a list
 texts = [title, instructions, length_tracker]
 
-# set movable area with enclosure
-thic = 10
-offset = max(texts, key = lambda a: a.get_height()).get_height() + 30
-movable_area = pygame.Surface((W, H - offset))
-pygame.draw.rect(movable_area, 'white', movable_area.get_rect(), width = thic)
-
 # create initial snake
 block_dims = (20,20)
 start_position = (block_dims[0]*(W//(2*block_dims[0])), block_dims[1]*(H//(2*block_dims[1])))
@@ -107,6 +108,11 @@ fruits = []
 speed = [4,4]
 last_key_pressed = []
 
+# set movable area with enclosure
+thic = lcm(block_dims[0], block_dims[1])
+offset = max(texts, key = lambda a: a.get_height()).get_height() + 30
+movable_area = pygame.Surface((W, H - offset))
+pygame.draw.rect(movable_area, 'white', movable_area.get_rect(), width = thic)
 
 # main game loop
 running = True
@@ -294,7 +300,7 @@ while running:
     screen.blit(length_tracker, (W-length_tracker.get_width()-20, title.get_height()//2))
 
     # draw encloure for the player
-    pygame.draw.rect(movable_area, 'white', movable_area.get_rect(), width = 10)
+    pygame.draw.rect(movable_area, 'white', movable_area.get_rect(), width = thic)
 
     # draw movable area for player
     screen.blit(movable_area, (0, offset))

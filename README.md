@@ -9,7 +9,7 @@ So far I have developed the following games:
 
 1. **Fruit Collector**: a simple game where you just move around and collect fruit. I was learning how to take in keystrokes and check image collision/hit detection here. Additionally, I learned how to wait some time before re-rendering the fruit. And finally, I uploaded a sprite sheet and read that into pygame (just made a simple one with a pixel art tool).
 
-2. **Snake**: I wanted to try to program snake to practice game logic and making a class, and this classic just made sense to me.
+2. **Snake**: I wanted to try to program snake to practice game logic and making a class, and this classic just made sense to me. There was some cool challenges here, like figuring out how to mke the blocks follow each other properly (i.e., only change direction when you're in line with the previous block). Also, I essentially implemented the snake as a linked list, which was a cool concept using data structures I learned back in school. Then finally, after getting the game logic working, I did more practice with sprite sheets.
 
 # Thanks for visiting!
 
