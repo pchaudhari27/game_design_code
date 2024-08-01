@@ -200,14 +200,15 @@ while running:
     last_key_pressed = last_key_pressed[:5]
 
     # check if your about to move off screen to end the game
-    if (head.curr_dir == 0 and head.pos[1] <= thic) or \
-       (head.curr_dir == 1 and head.pos[0] >= W - block_dims[0] - thic) or \
-       (head.curr_dir == 2 and head.pos[1] >= H - block_dims[1] - thic - offset) or \
-       (head.curr_dir == 3 and head.pos[0] <= thic):
+    if (head.curr_dir == 0 and head.pos[1] < thic) or \
+       (head.curr_dir == 1 and head.pos[0] > W - block_dims[0] - thic) or \
+       (head.curr_dir == 2 and head.pos[1] > H - block_dims[1] - thic - offset) or \
+       (head.curr_dir == 3 and head.pos[0] < thic):
         extra_message = 'you fell off the edge of the world!'
-        print('\nGame Over! You ate yourself!')
+        print('\nGame Over! You fell off the edge of the world!')
 
         lost = True
+        continue
 
     # generate fruits randomly every 3 seconds
     fruit_timer += 1
