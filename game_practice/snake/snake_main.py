@@ -343,4 +343,4 @@ if __name__ == "__main__":
     W, H = 1300, 1000
     screen = pygame.display.set_mode((W, H))
     
-    main_game_loop(screen, pygame.image.load('./sprite_small_snake.png').convert(), (20, 20))
+    main_game_loop(screen, pygame.image.load('./images/sprite_small_snake.png').convert(), (20, 20))

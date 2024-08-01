@@ -35,7 +35,7 @@ movable_area = pygame.Surface((W, H - offset))
 pygame.draw.rect(movable_area, 'white', movable_area.get_rect(), width = thic)
 
 # get creepy dude spritesheet
-player_sheet = pygame.image.load('./sprite_creepy_dude.png').convert()
+player_sheet = pygame.image.load('./images/sprite_creepy_dude.png').convert()
 sprite_res = (100, 100)
 
 # set rects for each sprite direction

@@ -72,12 +72,12 @@ def home_page_loop(screen: pygame.Surface):
                     if W//2 - easy_button.get_width()//2 <= x <= W//2 + easy_button.get_width()//2 and \
                        H//2 <= y <= H//2 + easy_button.get_height():
                         # if on easy button, load easy sprite and block size
-                        snake_sprite = pygame.image.load('./sprite_big_snake.png')
+                        snake_sprite = pygame.image.load('./images/sprite_big_snake.png')
                         block_dims = (50, 50)
                     elif W//2 - hard_button.get_width()//2 <= x <= W//2 + hard_button.get_width()//2 and \
                        2*H//3 <= y <= 2*H//3 + hard_button.get_height():
                         # if on hard button, load hard sprite and block size
-                        snake_sprite = pygame.image.load('./sprite_small_snake.png')
+                        snake_sprite = pygame.image.load('./images/sprite_small_snake.png')
                         block_dims = (20, 20)
                     
                     # if hey select a difficulty
