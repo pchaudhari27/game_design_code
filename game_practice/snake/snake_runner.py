@@ -7,7 +7,8 @@ from snake_main import main_game_loop
 pygame.init()
 
 # get screen with width and height
-W, H = 1300, 1000
+W, H = min(pygame.display.get_desktop_sizes())
+W, H = 5*W//6, 5*H//6
 screen = pygame.display.set_mode((W, H))
 
 # main game loop
