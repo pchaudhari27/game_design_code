@@ -1,0 +1,8 @@
+name: pygame_gamedev
+channels:
+  - conda-forge
+dependencies:
+  - pygame
+  - numpy
+  - scipy
+  - pandas
