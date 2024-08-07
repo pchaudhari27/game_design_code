@@ -56,7 +56,7 @@ horse_pos = [(W//5, (i + 1)*H//(len(colors) + 3) - 50) for i in range(len(colors
 tracks = [[(W//5, (i + 1)*H//(len(colors) + 3)), (4*W//5, (i + 1)*H//(len(colors) + 3))] for i in range(len(colors))]
 
 # horse speeds
-speeds = [1 for _ in range(len(colors))]
+speeds = [10 for _ in range(len(colors))]
 
 # main game loop
 running = True
@@ -96,7 +96,7 @@ while running:
     # Game logic updates
     ###############################
     # change horses speeds by a random amount
-    speeds = [max(1, speeds[i] + random.randint(-5, 5)) for i in range(len(colors))]
+    speeds = [max(5, speeds[i] + random.randint(-5, 5)) for i in range(len(colors))]
 
     # move horses
     horse_pos = [(horse_pos[i][0] + speeds[i], horse_pos[i][1]) for i in range(len(colors))]
