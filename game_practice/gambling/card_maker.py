@@ -40,7 +40,7 @@ suits = list(suit_locs.keys())
 values = list(value_locs.keys())
 
 # card class
-class Card:
+class CardCreation:
     def __init__(self, _value: str | int, _suit: str, _card_size: tuple[int, int]):
         if str(_value) not in value_locs:
             raise ValueError(f'Value must be in {list(value_locs.keys())}')
@@ -52,7 +52,7 @@ class Card:
         self.suit = _suit
         self.card_size = _card_size
 
-    def get_card(self, scale_size: tuple[int, int]):
+    def get_card(self, scale_size: int = 1):
         # create card surfaces
         suit_img = pygame.Surface(self.card_size)
         value_img = pygame.Surface(self.card_size)
@@ -68,7 +68,7 @@ class Card:
         suit_img.blit(value_img, (0,0))
 
         # scale to desired size
-        suit_img = pygame.transform.scale(suit_img, scale_size)
+        suit_img = pygame.transform.scale(suit_img, (self.card_size[0]*scale_size, self.card_size[1]*scale_size))
 
         return suit_img
 
@@ -93,7 +93,7 @@ while running:
     # Game logic updates
     ###############################
     # ...
-    card = Card(values[vind], suits[sind], card_size)
+    card = CardCreation(values[vind], suits[sind], card_size)
     cards.blit(card.get_card(card_size), (vind*card_size[0], sind*card_size[1]))
 
     ###############################
