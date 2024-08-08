@@ -35,7 +35,6 @@ screen = pygame.display.set_mode((W, H))
 
 # get card_sprites.png
 sprites = pygame.image.load('./card_part_sprites.png').convert()
-
 suits = list(suit_locs.keys())
 values = list(value_locs.keys())
 
