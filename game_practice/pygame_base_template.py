@@ -14,8 +14,8 @@ clock = pygame.time.Clock()
 # main game loop
 running = True
 while running:
-    # if player clicks X then exit
     for event in pygame.event.get():
+        # if player clicks X then exit
         if event.type == pygame.QUIT:
             running = False
     
