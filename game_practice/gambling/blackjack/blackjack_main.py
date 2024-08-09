@@ -1,6 +1,6 @@
 import pygame
 from pygame.locals import *
-from classes import Card, BlackjackDealerHand, BlackjackPlayerHand
+from classes import Card, BlackjackDealerHand, BlackjackHand
 from helper_utils import center_blit, reshuffle_deck
 
 def main_game(
@@ -9,7 +9,8 @@ def main_game(
     cardback: pygame.Surface, 
     values: list[str], 
     suits: list[str],
-    scale_size: int = 5
+    scale_size: int = 5,
+    num_decks: int = 4
 ):
     # start pygame 
     pygame.init()
@@ -39,15 +40,14 @@ def main_game(
     clock = pygame.time.Clock()
 
     # test deck and displaying of dealer and player cards
-    deck = reshuffle_deck()
-
+    deck = reshuffle_deck(num_decks)
     cs = []
     for i in range(4):
         c = deck.pop()
         cs.append(Card(values.index(c[0]), suits.index(c[1]), card_size, cardback))
 
     dealer = BlackjackDealerHand(cs[0], cs[1])
-    player = BlackjackPlayerHand(cs[2], cs[3])
+    player = BlackjackHand(cs[2], cs[3])
 
     dcolor = pygame.Color(200, 53, 53)
     pcolor = pygame.Color(238, 208, 31)
@@ -96,10 +96,10 @@ def main_game(
                     cs.append(Card(values.index(c[0]), suits.index(c[1]), card_size, cardback))
 
                     if len(deck) == 0:
-                        deck = reshuffle_deck()
+                        deck = reshuffle_deck(num_decks)
 
                 dealer = BlackjackDealerHand(cs[0], cs[1])
-                player = BlackjackPlayerHand(cs[2], cs[3])
+                player = BlackjackHand(cs[2], cs[3])
 
                 # main game loop
                 running = True
@@ -114,8 +114,14 @@ def main_game(
         ###############################
         # ...
 
-        # check for busts
-        if player.is_blackjack() or dealer.is_blackjack():
+        # check for busts and blackjacks
+        pbust = player.is_bust()
+        dbust = dealer.is_bust()
+        pbj = player.is_blackjack()
+        dbj = dealer.is_blackjack()
+
+        # check for blackjacks and player clicks
+        if pbj or dbj:
             player_stay = True
             player_hit = False
         elif player_stay:
@@ -130,7 +136,7 @@ def main_game(
                 dealer.hit(card)
 
                 if len(deck) == 0:
-                    deck = reshuffle_deck()
+                    deck = reshuffle_deck(num_decks)
         elif player_hit:
             # if player hits then add one card to their hand
             c = deck.pop()
@@ -138,7 +144,7 @@ def main_game(
             player.hit(card)
 
             if len(deck) == 0:
-                deck = reshuffle_deck()
+                deck = reshuffle_deck(num_decks)
             
             player_hit = False
             player_stay = player.is_bust()
@@ -241,7 +247,7 @@ def main_game(
         # current hand
         screen.blit(dtext, (150, 50))
         screen.blit(ptext, (150, H - card_size[1]*scale_size - 150))
-        screen.blit(dealer.draw_hand(scale_size, (0,0), screen_bg), (150, 100))
+        screen.blit(dealer.draw_hand(scale_size, screen_bg), (150, 100))
         screen.blit(player.draw_hand(scale_size, screen_bg), (150, H - card_size[1]*scale_size - 100))
 
 

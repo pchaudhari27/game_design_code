@@ -2,10 +2,12 @@ import pygame
 from pygame.locals import *
 from blackjack_main import main_game
 from blackjack_menu import main_menu
-from holder import screen, card_sprites, cardback_sprites, values, suits
+from holder import screen, card_sprites, cardback_sprites, values, suits, card_size, cardback_size
 
 # start pygame 
 pygame.init()
 
-cardback = main_menu(screen, cardback_sprites, (40, 56), 6)
-main_game(screen, (20, 28), cardback, values, suits, 6)
+cardback, num_decks = main_menu(screen, cardback_sprites, cardback_size, 6)
+
+if cardback and num_decks:
+    main_game(screen, card_size, cardback, values, suits, 6, num_decks)

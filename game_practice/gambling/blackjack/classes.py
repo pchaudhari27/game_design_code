@@ -31,6 +31,9 @@ class Card:
                 case _:
                     self.value = 11
 
+    def __str__(self):
+        return f'{values[self.vind]}, {suits[self.sind]}, {self.value}'
+
     def draw_card(self, scale_size: int = 1):
         '''
         Renders image of the card from sprite sheet.
@@ -68,10 +71,10 @@ class Card:
         if self.value == 11:
             self.value = 1
 
-        return Card(self.vind, self.sind, self.card_size, self.value)
+        return Card(self.vind, self.sind, self.card_size, self.cardback, self.value)
 
 # blackjack hand classes
-class BlackjackDealerHand:
+class BlackjackHand:
     '''
     This class stores a list of cards and stores their value for Blackjack.
     '''
@@ -81,8 +84,14 @@ class BlackjackDealerHand:
         '''
         self.cards = [_card1, _card2]
         self.value = sum([c.value for c in self.cards])
-        self.hide = True
     
+    def __str__(self):
+        ret = ''
+        for c in self.cards:
+            ret += c.__str__() + '\n'
+        
+        return ret
+
     def hit(self, _card: Card):
         '''
         Add another card to the list.
@@ -95,69 +104,14 @@ class BlackjackDealerHand:
         Checks if value is over 21, and devalues aces if possible.
         '''
         # if you bust, then devalue all cards
+        self.cards.sort(key = lambda c: c.value, reverse = True)
         if self.value > 21:
-            self.cards = [c.devalue() for c in self.cards]
-            self.value = sum([c.value for c in self.cards])
-        
-        # if you bust after devaluing, then you lose
-        if self.value > 21:
-            return True
-        
-        return False
-    
-    def is_blackjack(self):
-        '''
-        Checks if value is 21.
-        '''
+            for c in self.cards:
+                c.devalue()
+                self.value = sum([c.value for c in self.cards])
 
-        return self.value == 21 and len(self.cards) == 2
-
-    def draw_hand(self, scale_size: int = 1, cardback_choice: tuple[int,int] = (0,0), bg_color: pygame.Color | str = 'grey'):
-        '''
-        Helper function to draw the blackjack hand for the dealer
-        '''
-        cardx, cardy = self.cards[0].card_size
-        img = pygame.Surface((cardx*(scale_size+1)*len(self.cards), cardy*scale_size))
-        img.fill(bg_color)
-
-        for i, card in enumerate(self.cards):
-            if i == 0:
-                img.blit(card.draw_card(scale_size), (0,0))
-                continue
-            
-            if self.hide:
-                img.blit(card.draw_cardback(scale_size), (cardx*(scale_size+1)*i, 0))
-            else:
-                img.blit(card.draw_card(scale_size), (cardx*(scale_size+1)*i, 0))
-
-        return img
-
-class BlackjackPlayerHand:
-    '''
-    This class stores a list of cards and stores their value for Blackjack.
-    '''
-    def __init__(self, _card1: Card, _card2: Card) -> None:
-        '''
-        Starting hand in blackjack has two cards.
-        '''
-        self.cards = [_card1, _card2]
-        self.value = sum([c.value for c in self.cards])
-    
-    def hit(self, _card: Card):
-        '''
-        Add another card to the list.
-        '''
-        self.cards.append(_card)
-        self.value += _card.value
-    
-    def is_bust(self):
-        '''
-        Checks if value is over 21, and devalues aces if possible.
-        '''
-        # if you bust, then devalue all cards
-        if self.value > 21:
-            self.cards = [c.devalue() for c in self.cards]
-            self.value = sum([c.value for c in self.cards])
+                if self.value < 21:
+                    return False
         
         # if you bust after devaluing, then you lose
         if self.value > 21:
@@ -182,5 +136,38 @@ class BlackjackPlayerHand:
 
         for i, card in enumerate(self.cards):
             img.blit(card.draw_card(scale_size), (cardx*(scale_size+1)*i, 0))
+
+        return img
+
+class BlackjackDealerHand(BlackjackHand):
+    '''
+    This class stores a list of cards and stores their value for Blackjack.
+    '''
+    def __init__(self, _card1: Card, _card2: Card) -> None:
+        '''
+        Starting hand in blackjack has two cards. However, dealer has to hide a card.
+        '''
+
+        self.hide = True
+        BlackjackHand.__init__(self, _card1, _card2)
+
+    # overrde draw_hand from BlackjackHand class
+    def draw_hand(self, scale_size: int = 1, bg_color: pygame.Color | str = 'grey'):
+        '''
+        Helper function to draw the blackjack hand for the dealer
+        '''
+        cardx, cardy = self.cards[0].card_size
+        img = pygame.Surface((cardx*(scale_size+1)*len(self.cards), cardy*scale_size))
+        img.fill(bg_color)
+
+        for i, card in enumerate(self.cards):
+            if i == 0:
+                img.blit(card.draw_card(scale_size), (0,0))
+                continue
+            
+            if self.hide:
+                img.blit(card.draw_cardback(scale_size), (cardx*(scale_size+1)*i, 0))
+            else:
+                img.blit(card.draw_card(scale_size), (cardx*(scale_size+1)*i, 0))
 
         return img
