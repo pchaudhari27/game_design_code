@@ -11,6 +11,10 @@ So far I have developed the following games:
 
 2. **Snake**: I wanted to try to program snake to practice game logic and making a class, and this classic just made sense to me. There was some cool challenges here, like figuring out how to mke the blocks follow each other properly (i.e., only change direction when you're in line with the previous block). Also, I essentially implemented the snake as a linked list, which was a cool concept using data structures I learned back in school. Then, after getting the game logic working, I did more practice with sprite sheets which was cool. Finally, I made a main menu screen which allows you to select your game difficulty and creates the size of the sprites based on your selection.
 
+3. **Horse Race**: A visualiztion of a horse race. It's not flushed out yet, but the idea is the horses run at different speed and I coded some momentum in there, but the horses are somewhat random.
+
+4. **Blackjack**: From the horse races, I got inspired to do more gambling stuff, since it's fun and the rules are very specific. I ended up diving pretty deep into this project, and I drew some cards and cardbacks to match. Run the card_maker.py first, then the blackjack_runner.py in the blackjack subfolder and it works great! I am happy with the product and could flush it out later. Also, it would integrate pretty well into a suite of casino games--maybe my next project :D
+
 # Thanks for visiting!
 
 [Pygame]: https://www.pygame.org/news
