@@ -1,6 +1,6 @@
 import pygame
 from pygame.locals import *
-from holder import screen, card_sprites, cardback_sprites, values, suits
+from holder import screen, card_sprites, cardback_sprites, values, suits, ckey
 
 # start
 pygame.init()
@@ -103,10 +103,9 @@ class BlackjackHand:
         '''
         Checks if value is over 21, and devalues aces if possible.
         '''
-        # if you bust, then devalue all cards
-        self.cards.sort(key = lambda c: c.value, reverse = True)
+        # if you bust, then devalue biggest cards
         if self.value > 21:
-            for c in self.cards:
+            for c in sorted(self.cards, key = lambda c: c.value, reverse = True):
                 c.devalue()
                 self.value = sum([c.value for c in self.cards])
 
@@ -151,7 +150,7 @@ class BlackjackDealerHand(BlackjackHand):
         self.hide = True
         BlackjackHand.__init__(self, _card1, _card2)
 
-    # overrde draw_hand from BlackjackHand class
+    # override draw_hand from BlackjackHand class
     def draw_hand(self, scale_size: int = 1, bg_color: pygame.Color | str = 'grey'):
         '''
         Helper function to draw the blackjack hand for the dealer

@@ -11,7 +11,8 @@ screen = pygame.display.set_mode((W, H))
 # card sprites
 card_sprites = pygame.image.load('../cards_sprites.png').convert()
 cardback_sprites = pygame.image.load('../cardback_sprites.png').convert()
-cardback_sprites.set_colorkey(pygame.Color(0,255,0))
+ckey = pygame.Color(0, 255, 0)
+cardback_sprites.set_colorkey(ckey)
 
 card_size = (20, 28)
 cardback_size = (40, 56)

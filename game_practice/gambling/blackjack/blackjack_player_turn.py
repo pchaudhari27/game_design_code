@@ -3,7 +3,10 @@ from pygame.locals import *
 from classes import Card, BlackjackDealerHand, BlackjackHand
 from helper_utils import center_blit, reshuffle_deck
 
-def main_game(
+def player_turn(
+    dealer: BlackjackDealerHand,
+    player: BlackjackHand,
+    deck: list[tuple[str, str]],
     screen: pygame.Surface,
     card_size: tuple[int, int],
     cardback: pygame.Surface,
@@ -62,15 +65,8 @@ def main_game(
 
     deck_pos = (W - menu_box.get_width() - card_deck.get_width() - 100, 100)
 
-    # test deck and displaying of dealer and player cards
-    deck = reshuffle_deck(num_decks)
-    cs = []
-    for i in range(4):
-        c = deck.pop()
-        cs.append(Card(values.index(c[0]), suits.index(c[1]), card_size, cardback))
-
-    dealer = BlackjackDealerHand(cs[0], cs[1])
-    player = BlackjackHand(cs[2], cs[3])
+    # create new deck if needed
+    if len(deck) == 0: deck = reshuffle_deck(num_decks)
 
     dcolor = pygame.Color(200, 53, 53)
     pcolor = pygame.Color(238, 208, 31)
@@ -80,13 +76,9 @@ def main_game(
     # main game loop
     running = True
     screen_bg = pygame.Color(53, 101, 77)
-    end_bg = pygame.Color(25, 25, 25)
 
     player_stay = False
     player_hit = False
-
-    freeze = False
-    frame_cntr = 0
 
     save_screen = pygame.Surface((W, H))
     hit_animation = False
@@ -105,6 +97,7 @@ def main_game(
                        stay_pos[1] <= y <= stay_pos[1] + stay_box.get_height():
                         # if you click on stay, then player_stay == True
                         player_stay = True
+                        return "stayed"
                     elif hit_pos[0] <= x <= hit_pos[0] + hit_box.get_width() and \
                          hit_pos[1] <= y <= hit_pos[1]  + hit_box.get_height():
                         # if you click on stay, then player_hit == True
@@ -179,16 +172,6 @@ def main_game(
         elif player_stay:
             # once you stay you can't hit anymore
             player_hit = False
-
-            # add cards to dealer's hand until 17 or more
-            dealer.hide = False
-            while dealer.value < 17:
-                c = deck.pop()
-                card = Card(values.index(c[0]), suits.index(c[1]), card_size, _cardback = cardback)
-                dealer.hit(card)
-
-                if len(deck) == 0:
-                    deck = reshuffle_deck(num_decks)
         elif player_hit:
             # if player hits then add one card to their hand
             c = deck.pop()
@@ -223,80 +206,15 @@ def main_game(
 
         # display win or lost banner based on outcome of the game
         if pbj and dbj:
-            tie_text = bust_font.render('Push!', True, 'white')
-            tie_box = pygame.Surface((W, 3*tie_text.get_height()))
-            tie_box.fill(end_bg)
-
-            center_blit(tie_box, tie_text)
-            center_blit(screen, tie_box)
-
-            freeze = True
+            return "Push"
         elif pbj:
-            win_text = bust_font.render('Blackjack! You Won!', True, pcolor)
-            win_box = pygame.Surface((W, 3*win_text.get_height()))
-            win_box.fill(end_bg)
-
-            center_blit(win_box, win_text)
-            center_blit(screen, win_box)
-
-            freeze = True
+            return "Player Blackjack"
         elif dbj:
-            lose_text = bust_font.render('Blackjack! You Lost!', True, dcolor)
-            lose_box = pygame.Surface((W, 3*lose_text.get_height()))
-            lose_box.fill(end_bg)
-
-            center_blit(lose_box, lose_text)
-            center_blit(screen, lose_box)
-
-            freeze = True
+            return "Dealer Blackjack"
         elif player.is_bust():
-            bust_text = bust_font.render('You Busted! You Lost!', True, dcolor)
-            bust_box = pygame.Surface((W, 3*bust_text.get_height()))
-            bust_box.fill(end_bg)
-            center_blit(bust_box, bust_text)
-
-            dealer.cards = dealer.cards[:2]
-            dealer.hide = True
-
-            center_blit(screen, bust_box)
-
-            freeze = True
-        elif dealer.is_bust():
-            bust_text = bust_font.render('Dealer Busted! You Won!', True, pcolor)
-            bust_box = pygame.Surface((W, 3*bust_text.get_height()))
-            bust_box.fill(end_bg)
-
-            center_blit(bust_box, bust_text)
-            center_blit(screen, bust_box)
-
-            freeze = True
-        elif player_stay and player.value == dealer.value:
-            tie_text = bust_font.render('Push!', True, 'white')
-            tie_box = pygame.Surface((W, 3*tie_text.get_height()))
-            tie_box.fill(end_bg)
-
-            center_blit(tie_box, tie_text)
-            center_blit(screen, tie_box)
-
-            freeze = True
-        elif player_stay and player.value > dealer.value:
-            win_text = bust_font.render('You Won!', True, pcolor)
-            win_box = pygame.Surface((W, 3*win_text.get_height()))
-            win_box.fill(end_bg)
-
-            center_blit(win_box, win_text)
-            center_blit(screen, win_box)
-
-            freeze = True
-        elif player_stay and player.value < dealer.value:
-            lose_text = bust_font.render('You Lost!', True, dcolor)
-            lose_box = pygame.Surface((W, 3*lose_text.get_height()))
-            lose_box.fill(end_bg)
-
-            center_blit(lose_box, lose_text)
-            center_blit(screen, lose_box)
-
-            freeze = True
+            return "Player Bust"
+        elif player_stay:
+            return "Player Stay"
 
         # current hand
         screen.blit(dtext, (150, 50))
@@ -314,23 +232,3 @@ def main_game(
     pygame.quit()
 
     return "quit"
-
-
-if __name__ == "__main__":
-    # get screen with width and height
-    W, H = 1300, 800
-    screen = pygame.display.set_mode((W, H))
-
-    # card sprites
-    card_sprites = pygame.image.load('../cards_sprites.png').convert()
-    cardback_sprites = pygame.image.load('../cardback_sprites.png').convert()
-    cardback_sprites.set_colorkey(pygame.Color(0,255,0))
-
-    cardback = pygame.Surface((40, 56))
-    cardback.fill('pink')
-
-    # card deck parameters
-    values = ['A', 'K', 'Q', 'J', '10', '9', '8', '7', '6', '5', '4', '3', '2']
-    suits = ['S', 'C', 'H', 'D']
-
-    main_game(screen, (20, 28), cardback, pygame.Color(0,255,0), values, suits, 6)
