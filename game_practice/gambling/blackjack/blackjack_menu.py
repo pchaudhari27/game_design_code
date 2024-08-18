@@ -21,7 +21,7 @@ def main_menu(
     # create text for menu
     title_text = title_font.render('Blackjack', True, 'white')
     cardback_prompt = basic_font.render('Choose your cardback!', True, 'white')
-    num_decks_prompt = basic_font.render('Choose your cardback!', True, 'white')
+    num_decks_prompt = basic_font.render('Choose your number of decks!', True, 'white')
 
     next_text = basic_font.render('Next', True, 'black')
     next_box = pygame.Surface((2*next_text.get_width(), 4*next_text.get_height()))

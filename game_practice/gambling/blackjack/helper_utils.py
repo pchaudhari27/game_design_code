@@ -30,9 +30,9 @@ def center_blit(
 
     bg_surface.blit(fg_surface, (override_width, override_height), area)
 
-def reshuffle_deck(num_decks:int = 1):
+def reshuffle_deck(num_decks: int = 1):
     '''
-    Helper function to get a shuffled deck.
+    Helper function to get a shuffled deck. Uses number of decks to see how many decks to use.
     '''
     possible_cards = list(product(values, suits))*num_decks
     random.shuffle(possible_cards)

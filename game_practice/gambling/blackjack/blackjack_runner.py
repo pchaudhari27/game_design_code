@@ -10,4 +10,11 @@ pygame.init()
 cardback, num_decks = main_menu(screen, cardback_sprites, cardback_size, 6)
 
 if cardback and num_decks:
-    main_game(screen, card_size, cardback, values, suits, 6, num_decks)
+    while True:
+        val = main_game(screen, card_size, cardback, values, suits, 6, num_decks)
+        if val == "back to menu":
+            cardback, num_decks = main_menu(screen, cardback_sprites, cardback_size, 6)
+
+        if val == "quit":
+            pygame.quit()
+            break

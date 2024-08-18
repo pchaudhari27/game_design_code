@@ -36,6 +36,19 @@ def main_game(
     center_blit(hit_box, hit_text)
     center_blit(stay_box, stay_text)
 
+    hit_pos = (W - 200, H - 200)
+    stay_pos = (W - 200, H - 300)
+
+    # create button for menu
+    menu_text = basic_font.render('Menu', True, 'black')
+
+    # stay text is longer so make both boxes the same size
+    menu_box = pygame.Surface((2*menu_text.get_width(), 4*menu_text.get_height()))
+
+    menu_box.fill('white')
+    center_blit(menu_box, menu_text)
+    menu_pos = (W - menu_box.get_width() - 10, 10)
+
     # get clock for frame setting
     clock = pygame.time.Clock()
 
@@ -75,14 +88,22 @@ def main_game(
                 (x,y), left = event.pos, event.button == 1
 
                 if left:
-                    if W - 200 <= x <= W - 200 + stay_box.get_width() and \
-                       200 <= y <= 200 + stay_box.get_height():
+                    if stay_pos[0] <= x <= stay_pos[0] + stay_box.get_width() and \
+                       stay_pos[1] <= y <= stay_pos[1] + stay_box.get_height():
                         # if you click on stay, then player_stay == True
                         player_stay = True
-                    elif W - 200 <= x <= W - 200 + hit_box.get_width() and \
-                         H - 200 <= y <= H - 200 + hit_box.get_height():
+                    elif hit_pos[0] <= x <= hit_pos[0] + hit_box.get_width() and \
+                         hit_pos[1] <= y <= hit_pos[1]  + hit_box.get_height():
                         # if you click on stay, then player_hit == True
                         player_hit = True
+
+            if event.type == pygame.MOUSEBUTTONUP:
+                (x,y), left = event.pos, event.button == 1
+
+                if left:
+                    if menu_pos[0] <= x <= menu_pos[0] + menu_box.get_width() and \
+                       menu_pos[1] <= y <= menu_pos[1] + menu_box.get_height():
+                        return "back to menu"
         
         if freeze:
             frame_cntr += 1
@@ -115,8 +136,6 @@ def main_game(
         # ...
 
         # check for busts and blackjacks
-        pbust = player.is_bust()
-        dbust = dealer.is_bust()
         pbj = player.is_blackjack()
         dbj = dealer.is_blackjack()
 
@@ -124,6 +143,7 @@ def main_game(
         if pbj or dbj:
             player_stay = True
             player_hit = False
+            dealer.hide = False
         elif player_stay:
             # once you stay you can't hit anymore
             player_hit = False
@@ -164,11 +184,12 @@ def main_game(
         # ....
 
         # stay and hit buttons
-        screen.blit(hit_box, (W - 200, H - 200))
-        screen.blit(stay_box, (W - 200, 200))
+        screen.blit(hit_box, hit_pos)
+        screen.blit(stay_box, stay_pos)
+        screen.blit(menu_box, menu_pos)
 
         # display win or lost banner based on outcome of the game
-        if player.is_blackjack() and dealer.is_blackjack():
+        if pbj and dbj:
             tie_text = bust_font.render('Push!', True, 'white')
             tie_box = pygame.Surface((W, 3*tie_text.get_height()))
             tie_box.fill(end_bg)
@@ -177,7 +198,7 @@ def main_game(
             center_blit(screen, tie_box)
 
             freeze = True
-        elif player.is_blackjack():
+        elif pbj:
             win_text = bust_font.render('Blackjack! You Won!', True, pcolor)
             win_box = pygame.Surface((W, 3*win_text.get_height()))
             win_box.fill(end_bg)
@@ -186,7 +207,7 @@ def main_game(
             center_blit(screen, win_box)
 
             freeze = True
-        elif dealer.is_blackjack():
+        elif dbj:
             lose_text = bust_font.render('Blackjack! You Lost!', True, dcolor)
             lose_box = pygame.Surface((W, 3*lose_text.get_height()))
             lose_box.fill(end_bg)
@@ -258,6 +279,8 @@ def main_game(
         clock.tick(60)
 
     pygame.quit()
+
+    return "quit"
 
 
 if __name__ == "__main__":
