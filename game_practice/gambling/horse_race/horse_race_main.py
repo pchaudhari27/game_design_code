@@ -42,6 +42,15 @@ colors = [
     pygame.Color(255,255,255), 
     pygame.Color(0,0,255)
 ]
+
+banner_colors = [
+    pygame.Color(0,0,0),
+    pygame.Color(255,255,255),
+    pygame.Color(0,0,0),
+    pygame.Color(0,0,0),
+    pygame.Color(125,125,125)
+]
+
 color_names = [
     'red', 
     'black', 
@@ -50,44 +59,79 @@ color_names = [
     'blue'
 ]
 horses = [pygame.Surface((50, 50)) for _ in colors]
-horse_pos = [(W//5, (i + 1)*H//(len(colors) + 3) - 50) for i in range(len(colors))]
 
 # create track
 tracks = [[(W//5, (i + 1)*H//(len(colors) + 3)), (4*W//5, (i + 1)*H//(len(colors) + 3))] for i in range(len(colors))]
 
-# horse speeds
-speeds = [10 for _ in range(len(colors))]
+class InitialState:
+    # horse starting positions
+    horse_pos = [(W//5, (i + 1)*H//(len(colors) + 3) - 50) for i in range(len(colors))]
+    # horse speeds
+    speeds = [10 for _ in range(len(colors))]
+
+    # winner selected
+    winner = []
+
+    # freeze game on win
+    freeze = False
+    freeze_frames = 0
+
+    def reset(self):
+        return self.horse_pos, self.speeds, self.winner, self.freeze, self.freeze_frames
+
+setup = InitialState()
+hps, ss, w, f, ff = setup.reset()
+w = w.copy()
 
 # main game loop
 running = True
-freeze = False
-winner = -1
-freeze_frames = 0
 while running:
     # if player clicks X then exit
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-
+        if event.type == pygame.MOUSEBUTTONUP:
+            hps, ss, w, f, ff = setup.reset()
+            w = w.copy()
+    
     # winning freeze frame
-    if freeze:
-        # write the winner on the screen
-        win_font = pygame.font.Font(size=50)
-        win_text = win_font.render(f'{color_names[winner].upper()} WON!', True, colors[winner])
+    if f:
+        if len(w) == 1:
+            # write the winner on the screen
+            win_font = pygame.font.Font(size=50)
+            win_text = win_font.render(f'{color_names[w[0]].upper()} WON!', True, colors[w[0]])
 
-        # invert color for background
-        win_text_background = pygame.Surface((W, win_text.get_height()*2))
-        win_text_background.fill(
-            pygame.Color(255 - colors[winner].r, 255 - colors[winner].g, 255 - colors[winner].b)
-        )
-        center_blit(win_text_background, win_text)
-        center_blit(screen, win_text_background)
+            # invert color for background
+            win_text_background = pygame.Surface((W, win_text.get_height()*2))
+            win_text_background.fill(banner_colors[w[0]])
+            center_blit(win_text_background, win_text)
+            center_blit(screen, win_text_background)
+        else:
+            tie_string = ""
+            for i, tier in enumerate(w):
+                tie_string += color_names[tier].upper()
+                if i == len(w) - 2:
+                    tie_string += ", and "
+                elif i == len(w) - 1:
+                    tie_string += " TIED! Photo Finish!"
+                else:
+                    tie_string += ", "
+
+            # write the winner on the screen
+            tie_font = pygame.font.Font(size=50)
+            tie_text = tie_font.render(tie_string, True, 'white')
+
+            # invert color for background
+            tie_text_background = pygame.Surface((W, tie_text.get_height()*2))
+            tie_text_background.fill(pygame.Color(50,50,50))
+            center_blit(tie_text_background, tie_text)
+            center_blit(screen, tie_text_background)
 
         pygame.display.flip()
 
-        freeze_frames += 1
+        ff += 1
         clock.tick(60)
-        if freeze_frames >= 300:
+        if ff >= 300:
             break
 
         continue
@@ -96,17 +140,17 @@ while running:
     # Game logic updates
     ###############################
     # change horses speeds by a random amount
-    speeds = [max(5, speeds[i] + random.randint(-5, 5)) for i in range(len(colors))]
+    ss = [max(5, ss[i] + random.randint(-1, 1)) for i in range(len(colors))]
 
     # move horses
-    horse_pos = [(horse_pos[i][0] + speeds[i], horse_pos[i][1]) for i in range(len(colors))]
+    hps = [(hps[i][0] + ss[i], hps[i][1]) for i in range(len(colors))]
 
     # if any of the horses won then freeze
-    for i, pos in enumerate(horse_pos):
+    for i, pos in enumerate(hps):
         if pos[0]+50 >= 4*W//5:
-            horse_pos[i] = (4*W//5 - 50, horse_pos[i][1])
-            winner = i
-            freeze = True
+            hps[i] = (4*W//5 - 50, hps[i][1])
+            w.append(i)
+            f = True
 
     ###############################
     # Screen updates
@@ -117,7 +161,7 @@ while running:
     # graphics changes
     for i in range(len(colors)):
         horses[i].fill(colors[i])
-        screen.blit(horses[i], horse_pos[i])
+        screen.blit(horses[i], hps[i])
         pygame.draw.line(screen, colors[i], tracks[i][0], tracks[i][1], 15)
 
     # show renderd graphics
