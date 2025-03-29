@@ -114,12 +114,16 @@ def main_game(
                        stay_pos[1] <= y <= stay_pos[1] + stay_box.get_height():
                         # if you click on stay, then player_stay == True
                         player_stay = True
+
                     elif hit_pos[0] <= x <= hit_pos[0] + hit_box.get_width() and \
                          hit_pos[1] <= y <= hit_pos[1]  + hit_box.get_height():
                         # if you click on stay, then player_hit == True
                         player_hit = True
-                        save_screen.blit(screen, (0, 0))
                         hit_animation = True
+
+                        save_screen.blit(screen, (0, 0))
+                        save_screen.blit(menu_box, menu_pos)
+
                         target = (150 + card_size[0]*(scale_size+1)*len(player.cards), H - card_size[1]*scale_size - 100)
                         fake_card = pygame.Rect(deck_pos, (card_size[0]*scale_size, card_size[1]*scale_size))
 
@@ -132,7 +136,7 @@ def main_game(
                         return "back to menu"
         
         if hit_animation:
-            fake_card = fake_card.move((target[0]-deck_pos[0])/200, (target[1]-deck_pos[1])/190)
+            fake_card = fake_card.move((target[0]-deck_pos[0])/100, (target[1]-deck_pos[1])/90)
             screen.fill(screen_bg)
             
             screen.blit(save_screen, (0,0))
@@ -142,7 +146,7 @@ def main_game(
             if fake_card.topleft[0] <= target[0]:
                 fake_card2 = fake_card.copy()
                 for i in range(20):
-                    clock.tick(50)
+                    clock.tick(100)
                     screen.blit(save_screen, (0,0))
                     screen.blit(pygame.transform.scale(cardback, fake_card2.size), fake_card2.topleft)
                     fake_card2 = fake_card2.scale_by(0.85, 1)
@@ -154,7 +158,7 @@ def main_game(
             continue
 
         if dealer_hit_animation:
-            fake_card = fake_card.move((target[0]-deck_pos[0])/200, (target[1]-deck_pos[1])/190)
+            fake_card = fake_card.move((target[0]-deck_pos[0])/100, (target[1]-deck_pos[1])/90)
             screen.fill(screen_bg)
             
             screen.blit(save_screen, (0,0))
@@ -164,7 +168,7 @@ def main_game(
             if fake_card.topleft[0] <= target[0]:
                 fake_card2 = fake_card.copy()
                 for i in range(20):
-                    clock.tick(50)
+                    clock.tick(100)
                     screen.blit(save_screen, (0,0))
                     screen.blit(pygame.transform.scale(cardback, fake_card2.size), fake_card2.topleft)
                     fake_card2 = fake_card2.scale_by(0.85, 1)
@@ -353,6 +357,7 @@ def main_game(
 
         if dealer_hit_animation:
             save_screen.blit(screen, (0, 0))
+            save_screen.blit(menu_box, menu_pos)
             target = (150 + card_size[0]*(scale_size+1)*len(dealer.cards), 100)
             fake_card = pygame.Rect(deck_pos, (card_size[0]*scale_size, card_size[1]*scale_size))
 
